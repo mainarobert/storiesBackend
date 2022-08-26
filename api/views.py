@@ -1,9 +1,12 @@
-from urllib import request
 from django.shortcuts import render
-from django.http import JsonResponse
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from . models import Story
+from . serializers import StorySerializer
 
 # Create your views here.
 
+@api_view(['GET'])
 def getRoute(request):
 
     routes = [
@@ -43,4 +46,16 @@ def getRoute(request):
         },
     ]
 
-    return JsonResponse(routes, safe=False)
+    return Response(routes)
+
+@api_view(['GET'])
+def getStories(request):
+    stories = Story.objects.all()
+    serializer= StorySerializer(stories, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def getStory(request, pk):
+    stories = Story.objects.get(id=pk)
+    serializer= StorySerializer(stories, many=False)
+    return Response(serializer.data)
