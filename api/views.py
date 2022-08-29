@@ -59,3 +59,15 @@ def getStory(request, pk):
     stories = Story.objects.get(id=pk)
     serializer= StorySerializer(stories, many=False)
     return Response(serializer.data)
+
+@api_view(['POST'])
+def createStory(request):
+    data= request.data
+    stories= Story.objects.create(
+        title = data['title'],
+        author = data['author'],
+        description = data['description'],
+        body = data['body'],
+    )
+    serializer = StorySerializer(stories, many= False)
+    return Response(serializer.data)
